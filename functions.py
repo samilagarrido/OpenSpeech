@@ -4,13 +4,14 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import os
 
-global qpt #quantidade de paginas totais
+#global qpt #quantidade de paginas totais
 qpt = 0
 data_inicio = [28, 3, 2022]
 data_fim = [28, 4, 2022]
 tamanho = 100
 current_page = 1
 UF = ''
+url = f'https://www.camara.leg.br/internet/SitaqWeb/ResultadoPesquisaDiscursos.asp?CurrentPage={current_page}&txIndexacao=&BasePesq=plenario&txOrador=&txPartido=&dtInicio={data_inicio[0]}/{data_inicio[1]}/{data_inicio[2]}&dtFim={data_fim[0]}/{data_fim[1]}/{data_fim[2]}&txUF={UF}&txSessao=&listaTipoSessao=&listaTipoInterv=&inFalaPres=&listaTipoFala=&listaFaseSessao=&txAparteante=&listaEtapa=&CampoOrdenacao=dtSessao&TipoOrdenacao=ASC&PageSize={tamanho}&txTexto=&txSumario='
 
 def SearchSpeech(data_inicio, data_fim, tamanho, UF= '', current_page = 1):
 
@@ -56,6 +57,7 @@ def SearchSpeech(data_inicio, data_fim, tamanho, UF= '', current_page = 1):
 def UrlToBS(url):
     html = requests.get(url)
     content = html.content
+    print("Entrei")
 
     return BeautifulSoup(content, 'html.parser')
 
@@ -74,4 +76,7 @@ def SpeechLinks():
         link_infos.append(temp)
         temp = [] #lista temporária que appenda em link_infos
 
+
     return link_infos
+
+print(SpeechLinks())

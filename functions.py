@@ -92,3 +92,23 @@ def SpeechLinks(qpt):
 
 
     return linkDiscurso
+
+def SpeechsTxt(qpt = qtd_discursos(0)):
+    '''doc'''
+
+    txt = []
+    for script in SpeechLinks(qpt)[0]:
+        url_script = UrlToBS(url)(script).find_all("font")
+        txt.append((str((url_script[0].contents)) + "+" + str((url_script[1].contents))).replace('<br/>','').replace('<b>', '').replace('</b>', '').replace('\'', ''))
+
+
+    for i in range(len(txt)):
+        if not(os.path.exists(f"./discursos/file_{i}.txt")):
+            textfile = open(f"./discursos/file_{i}.txt", "x")
+            textfile.close()
+
+    for i in range(len(txt)):
+
+        textfile = open(f"./discursos/file_{i}.txt", "w")
+        textfile.write(txt[i] + "\n")
+        textfile.close()

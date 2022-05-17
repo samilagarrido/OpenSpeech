@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import os
 
 #global qpt #quantidade de paginas totais
-qpt = 0
+#qpt = 0
 data_inicio = [28, 3, 2022]
 data_fim = [28, 4, 2022]
 tamanho = 100
@@ -13,7 +13,20 @@ current_page = 1
 UF = ''
 url = f'https://www.camara.leg.br/internet/SitaqWeb/ResultadoPesquisaDiscursos.asp?CurrentPage={current_page}&txIndexacao=&BasePesq=plenario&txOrador=&txPartido=&dtInicio={data_inicio[0]}/{data_inicio[1]}/{data_inicio[2]}&dtFim={data_fim[0]}/{data_fim[1]}/{data_fim[2]}&txUF={UF}&txSessao=&listaTipoSessao=&listaTipoInterv=&inFalaPres=&listaTipoFala=&listaFaseSessao=&txAparteante=&listaEtapa=&CampoOrdenacao=dtSessao&TipoOrdenacao=ASC&PageSize={tamanho}&txTexto=&txSumario='
 
-def SearchSpeech(data_inicio, data_fim, tamanho, UF= '', current_page = 1):
+def qtd_discursos(qpt):
+    #>>Retorna quantidade de discursos da busca
+
+    quantidade_de_discursos= []
+    qtd_discursos_totais = 0
+    soup = UrlToBS(url)
+    for links in soup.find_all('span', attrs={'class':"visualStrong"}):
+        quantidade_de_discursos.append(links.contents)
+    qtd_discursos_totais = int((quantidade_de_discursos[len(quantidade_de_discursos)-1][0]).replace('.',''))
+    qpt = int(qtd_discursos_totais/tamanho)  + 1
+
+    return qpt
+
+def SearchSpeech(data_inicio, data_fim, tamanho, qpt, UF= '', current_page = 1):
 
     #>>Obtenção da url dinâmica
 
@@ -33,14 +46,6 @@ def SearchSpeech(data_inicio, data_fim, tamanho, UF= '', current_page = 1):
     content = html.content
     soup = BeautifulSoup(content, 'html.parser')
 
-    #>>Retorna quantidade de discursos da busca
-
-    quantidade_de_discursos= []
-    qtd_discursos_totais = 0
-    for links in soup.find_all('span', attrs={'class':"visualStrong"}):
-        quantidade_de_discursos.append(links.contents)
-    qtd_discursos_totais = int((quantidade_de_discursos[len(quantidade_de_discursos)-1][0]).replace('.',''))
-    qpt = int(qtd_discursos_totais/tamanho)  + 1
 
     #>>Retorna o dataframe
 
@@ -56,13 +61,11 @@ def SearchSpeech(data_inicio, data_fim, tamanho, UF= '', current_page = 1):
 
 def UrlToBS(url):
     html = requests.get(url)
-    content = html.content
-    print("Entrei")
-
-    return BeautifulSoup(content, 'html.parser')
+    #content = html.content
+    return BeautifulSoup(html.content, 'html.parser')
 
 
-def SpeechLinks():
+def SpeechLinks(qpt):
 
     link_infos= []
     soup = []
@@ -76,7 +79,16 @@ def SpeechLinks():
         link_infos.append(temp)
         temp = [] #lista temporária que appenda em link_infos
 
+    #>>Limpeza dos links
 
-    return link_infos
+    linkDiscurso = []
+    temp = []
+    for i in range(qpt):
+        for item in link_infos[i]:
+            text = item.replace('\t','').replace('\n','').replace('\r','').replace(' ','')
+            temp.append(("https://www.camara.leg.br/internet/SitaqWeb/"+text))
+        linkDiscurso.append(temp)
+        temp = []
 
-print(SpeechLinks())
+
+    return linkDiscurso

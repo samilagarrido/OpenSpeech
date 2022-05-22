@@ -93,7 +93,7 @@ def SpeechLinks(qpt):
 
     return linkDiscurso
 
-def SpeechsTxt(qpt = qtd_discursos(0)):
+def speechs_txt(qpt = qtd_discursos(0)):
     '''doc'''
 
     txt = []

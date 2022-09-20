@@ -93,8 +93,9 @@ def count_words():
         dict_termos.append(new_dict)
     df['qtd_termos'] = dict_termos
     df['termos'] = [df['termos'][i].tolist() for i in range(len(df['termos']))]
-
+    id_discursos = [d.replace('.txt', '') for d in os.listdir('discursos')]
+    df['Id'] = id_discursos
     return df
 
 
-count_words().to_csv('df_discursos.csv', encoding='utf-8', index=False)
+count_words().to_csv('datasets/df_discursos.csv', encoding='utf-8', index=False)

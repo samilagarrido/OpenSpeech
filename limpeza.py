@@ -51,7 +51,7 @@ def clean_speech():
     for i in range(len(discursos_lista)):
 
         #Retirando os sons ambientes
-        sons_ambiente = ['<tr><td align="center">(<i>Soa a campainha.</i>)</td></tr></table>', '<i>(Palmas.)</i>']
+        sons_ambiente = ['<tr>','<td align="center">','<i>Interrupção do som.</i>','(<i>Soa a campainha.</i>)','</td>','</tr>','</table>', '<i>(Palmas.)</i>', 'width', 'table']
         for j in sons_ambiente:
             discursos_lista[i] = discursos_lista[i].replace(j, '')
         
@@ -61,7 +61,7 @@ def clean_speech():
             discursos_lista[i] = discursos_lista[i].replace(j, '')
 
         #Retirando pontuacoes
-        pontuacoes = ['.', ':', '...', '(', ')', '[', ']', '{', '}', '!', '?', ',', ';', '-', '_', "'", "\"", "nº", '<', '>', '\\', '|', '/', ', , ', ']\n']
+        pontuacoes = ['.', ':', '...', '(', ')', '[', ']', '{', '}', '!', '?', ',', ';', '-', '_', "'", "\"", "nº", '<', '>', '\\', '|', '/', ', , ', ']\n', '=', '%']
         for j in pontuacoes:
             discursos_lista[i] = discursos_lista[i].replace(j, '')
 

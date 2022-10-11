@@ -1,3 +1,7 @@
+'''Limpeza - recebe, verifica, limpa e faz a contagem
+    dos termos'''
+
+#bibliotecas
 import os
 import re
 import pandas as pd
@@ -5,7 +9,9 @@ from stop_words import get_stop_words
 
 
 def get_speech():
-    # Recebendo os discursos
+
+    # >> Recebendo os discursos
+
     discursos = []
     for j in os.listdir('discursos'):
         file = open(f'discursos/{j}', 'r', encoding="utf-8")
@@ -16,6 +22,9 @@ def get_speech():
     return discursos
 
 def verify_speech():
+
+    # >> verifica os discursos
+
     revisado = []
     for j in range(len(get_speech())):
         if(re.search(r'Sem revisão', get_speech()[j])):
@@ -29,6 +38,8 @@ def verify_speech():
     return df_discursos
 
 def clean_speech():
+
+    # >> limpa os discursos
 
     df = verify_speech()
     conectivos_lista = []
@@ -86,6 +97,9 @@ def clean_speech():
     return df
 
 def count_words():
+
+    # >> contando os termos dos discursos
+
     df = clean_speech()
     dict_termos = []
     for i in range(len(df['termos'])):

@@ -1,4 +1,9 @@
+'''Discursos - realiza as operações necessárias para 
+    calcular os termos usados nos discursos'''
+
+#biblioteca
 from collections import defaultdict
+
 
 class DiscursosPartido:
     def __init__(self, partido, termos, total_termos = 0, soma_relativa = defaultdict(int), coordenada = ('right', 'up')):

@@ -6,7 +6,8 @@ import os
 import re
 import pandas as pd
 from stop_words import get_stop_words
-
+import spacy
+nlp = spacy.load("pt_core_news_sm")
 
 def get_speech():
 
@@ -92,7 +93,33 @@ def clean_speech():
         termos_discursos.append(termos)
 
     df['discursos'] = discurso_limpo
-    df['termos'] = [pd.Series(i) for i in termos_discursos]
+    
+    token_terms = []
+
+    for i in range(len(termos_discursos)):
+
+        terms = []
+        for j in range(len(termos_discursos[i])):
+            word = nlp(termos_discursos[i][j])
+            for token in word:
+                if token.tag_ != 'NPROP'or token.tag_ == 'VERB':
+                    terms.append(token.text)
+                    print(token.text, "|", token.tag_, "|", spacy.explain(token.tag_))
+        
+        #Aplicando a lemmatizatição
+
+        lemma_list = []
+        for j in range(len(terms)):
+            word = nlp(terms[j])
+            for token in word:
+                lemma_list.append(token.lemma_)
+
+
+        terms = [termo for termo in lemma_list]
+        token_terms.append(terms)
+
+
+    df['termos'] = [pd.Series((i).upper()) for i in token_terms]
 
     return df
 

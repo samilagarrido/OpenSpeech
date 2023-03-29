@@ -22,6 +22,30 @@ def get_speech():
     discursos = pd.Series(discursos)
     return discursos
 
+#/////////////////////ADICAO DO LIMPEZA.IPYNB
+
+def verify_revision():
+
+    # >> verifica se hove revisão nos discursos
+
+    discursos = get_speech()
+    revisado = []
+    for j in range(len(discursos)):
+        if(re.search(r'Sem revisão', discursos[j])):
+            revisado.append(False)
+        else:
+            revisado.append(True)
+    revisao = pd.Series(revisado)
+
+    df_discursos = {"discursos" : discursos,
+                "revisao" : revisao}
+    df_discursos = pd.concat(df_discursos, axis=1)
+    return df_discursos
+
+    # No caso de já ter sido verificado, ele pularia verify_speech
+
+#//////////////////
+
 def verify_speech():
 
     # >> verifica os discursos
@@ -137,6 +161,5 @@ def count_words():
     id_discursos = [d.replace('.txt', '') for d in os.listdir('discursos')]
     df['Id'] = id_discursos
     return df
-
 
 count_words().to_csv('datasets/df_discursos.csv', encoding='utf-8', index=False)

@@ -4,12 +4,12 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import os
 
-class FileNumber:
-    def __init__(self, count_file = 0):
-        self.count_file = count_file
+# class FileNumber:
+#     def __init__(self, count_file = 0):
+#         self.count_file = count_file
 
-    def next(self):
-        self.count_file += 1
+#     def next(self):
+#         self.count_file += 1
 
 
 first_day = [28, 3, 2022] #dd/mm/yyyy
@@ -67,37 +67,49 @@ def SpeechLinks(asd):
 
     return linkDiscurso
 
+def get_id(link):
+    id = []
+    id.append('nI')
+    id.append((re.findall(r'(?<=nuInsercao=)\d+', link))[0])
+    id.append("nQ")
+    id.append((re.findall(r'(?<=nuQuarto=)\d+', link))[0])
+    id.append("nS")
+    id.append((re.findall(r'(?<=nuSessao=)\d+', link))[0])
+    id.append("nO")
+    id.append((re.findall(r'(?<=nuOrador=)\d+', link))[0])
+    return "".join(id)
+
 def speechs_txt(link_list):
     '''create speechs in doc file'''
 
-    file_number = FileNumber(len(os.listdir('speechs')))
+    # file_number = FileNumber(len(os.listdir('speechs')))
 
     txt = []
+    id = []
     for script in link_list:
         url_script_html = UrlToBS(script)
         url_script = url_script_html.find_all("font")
         if (len(url_script) < 2):
-            print(file_number.count_file)
-            print(url_script_html)
-            print(script)
-            print(url_script)
-            print("É menor que 2")
             continue
         txt.append((str((url_script[0].contents)) + "+" + str((url_script[1].contents))).replace('<br/>','').replace('<b>', '').replace('</b>', '').replace('\'', ''))
-    for i in txt:
-        textfile = open(f"./speechs/file_{file_number.count_file}.txt", "w")
-        textfile.write(i + "\n")
+        id.append(get_id(script))
+    for i in range(len(txt)):
+        textfile = open(f"./speechs/file_{id[i]}.txt", "w")
+        textfile.write(txt[i] + "\n")
         textfile.close()
-        file_number.next()
+        # file_number.next()
+
+
+# main code
 
 link_list = SpeechLinks(count_speechs())
 
 if not('speechs' in os.listdir()):
     os.mkdir('speechs/')
-    for i in range(count_speechs()-1):
-        print(i)
-        speechs_txt(link_list[i])
-else:
-    for i in range(int(len(os.listdir('speechs/'))/100),count_speechs()-1):
-        print(i)
-        speechs_txt(link_list[i])
+    
+for i in range(count_speechs()-1):
+    print(i)
+    print(f'link list len = {len(link_list)}')
+    print(f'link list i len = {len(link_list[i])}')
+    speechs_txt(link_list[i])
+    # print(link_list[i])

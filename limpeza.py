@@ -9,6 +9,7 @@ from stop_words import get_stop_words
 import spacy
 nlp = spacy.load("pt_core_news_sm")
 
+
 def get_speech():
 
     # >> Recebendo os discursos
@@ -21,30 +22,6 @@ def get_speech():
         file.close
     discursos = pd.Series(discursos)
     return discursos
-
-#/////////////////////ADICAO DO LIMPEZA.IPYNB
-
-def verify_revision():
-
-    # >> verifica se hove revisão nos discursos
-
-    discursos = get_speech()
-    revisado = []
-    for j in range(len(discursos)):
-        if(re.search(r'Sem revisão', discursos[j])):
-            revisado.append(False)
-        else:
-            revisado.append(True)
-    revisao = pd.Series(revisado)
-
-    df_discursos = {"discursos" : discursos,
-                "revisao" : revisao}
-    df_discursos = pd.concat(df_discursos, axis=1)
-    return df_discursos
-
-    # No caso de já ter sido verificado, ele pularia verify_speech
-
-#//////////////////
 
 def verify_speech():
 

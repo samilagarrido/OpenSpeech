@@ -8,6 +8,12 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import os
 
+
+# codigo de verificação de ssl 
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
+
 #declarações
 
 #global qpt #quantidade de paginas totais
@@ -134,3 +140,30 @@ def speechs_txt(qpt = qtd_discursos(0)):
         textfile = open(f"./discursos/file_{i}.txt", "w")
         textfile.write(txt[i] + "\n")
         textfile.close()
+
+
+def id_speechs():
+
+    # >> Criando um ID para identificar os discursos
+
+    id_list = []
+    id = []
+    for i in range(len(SpeechLinks()[0])):
+        id.append('nI')
+        id.append((re.findall(r'(?<=nuInsercao=)\d+', SpeechLinks()[0][i]))[0])
+        id.append("nQ")
+        id.append((re.findall(r'(?<=nuQuarto=)\d+', SpeechLinks()[0][i]))[0])
+        id.append("nS")
+        id.append((re.findall(r'(?<=nuSessao=)\d+', SpeechLinks()[0][i]))[0])
+        id.append("nO")
+        id.append((re.findall(r'(?<=nuOrador=)\d+', SpeechLinks()[0][i]))[0])
+        id_list.append("".join(id))
+        id = []
+    
+    return id_list
+
+def date_change(data_frame):
+
+    # >> Colocando as datas em formato ano-mês-dia
+
+    data_frame[0][0]["Data"] = pd.to_datetime(data_frame[0][0]["Data"])

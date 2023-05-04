@@ -9,6 +9,7 @@ from stop_words import get_stop_words
 import spacy
 nlp = spacy.load("pt_core_news_sm")
 
+
 def get_speech():
 
     # >> Recebendo os discursos
@@ -137,6 +138,5 @@ def count_words():
     id_discursos = [d.replace('.txt', '') for d in os.listdir('discursos')]
     df['Id'] = id_discursos
     return df
-
 
 count_words().to_csv('datasets/df_discursos.csv', encoding='utf-8', index=False)
